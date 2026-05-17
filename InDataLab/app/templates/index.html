@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InDataLab - Plataforma de Notebooks (Estilo Novo + Funcionalidade Antiga)</title>
+    <!-- Bootstrap 5 + Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- Google Fonts - Tipografia Premium -->
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Marked.js para renderizar Markdown -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
+    <style>
+        /* ==================== DESIGN SYSTEM (da versão nova) ==================== */
+        :root {
+            --primary: #0f63d8;
+            --primary-dark: #0a47a0;
+            --primary-light: #e8f0ff;
+            --success: #10a981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --bg-light: #f8fafc;
+            --bg-lighter: #f1f5f9;
+            --text-primary: #0f172a;
+            --text-secondary: #64748b;
+            --text-tertiary: #94a3b8;
+            --border-light: #e2e8f0;
+            --border-default: #cbd5e1;
+            --shadow-sm: 0 1px 2px 0 rgba(15, 23, 42, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(15, 23, 42, 0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(15, 23, 42, 0.15);
+            --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-base: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            font-family: 'Sora', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        code, pre {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--bg-light) 0%, #ffffff 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .container-fluid {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* ==================== NAVBAR ==================== */
+        .navbar-custom {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            padding: 1rem 1.5rem;
+            box-shadow: var(--shadow-lg);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: white !important;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .navbar-brand i {
+            font-size: 1.75rem;
+        }
+
+        /* ==================== SIDEBAR ==================== */
+        .sidebar {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+            transition: all var(--transition-base);
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
+        .sidebar .card {
+            border: 0;
+            box-shadow: none;
+        }
+
+        .sidebar .card-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: 0;
+            padding: 1rem;
+            font-weight: 600;
+        }
+
+        .sidebar .card-header h5 {
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .sidebar .btn-light {
+            background: rgba(255, 255, 255, 0.2) !important;
+            color: white !important;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all var(--transition-fast);
+        }
+
+        .sidebar .btn-light:hover {
+            background: rgba(255, 255, 255, 0.3) !important;
+            transform: scale(1.05);
+        }
+
+        .list-group-item {
+            border: 0;
+            border-bottom: 1px solid var(--border-light);
+            padding: 1rem;
+            transition: all var(--transition-fast);
+            cursor: pointer;
+        }
+
+        .list-group-item:last-child {
+            border-bottom: 0;
+        }
+
+        .list-group-item:hover {
+            background: var(--primary-light);
+            transform: translateX(4px);
+        }
+
+        .list-group-item.active {
+            background: var(--primary-light);
+            color: var(--primary);
+            border-left: 3px solid var(--primary);
+            padding-left: calc(1rem - 3px);
+            font-weight: 600;
+        }
+
+        .list-group-item small {
+            display: block;
+            margin-top: 0.25rem;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+        }
+
+        .sidebar .card-footer {
+            background: var(--bg-lighter);
+            border-top: 1px solid var(--border-light);
+            padding: 0.75rem;
+        }
+
+        .pagination-sm .page-link {
+            border-radius: 6px;
+            border: 1px solid var(--border-light);
+            color: var(--text-primary);
+            transition: all var(--transition-fast);
+            margin: 0 2px;
+        }
+
+        .pagination-sm .page-link:hover {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .pagination-sm .page-link.active {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        /* ==================== MAIN CARD ==================== */
+        .main-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-light);
+            overflow: hidden;
+            transition: all var(--transition-base);
+        }
+
+        .main-card:hover {
+            box-shadow: var(--shadow-lg);
+        }
+
+        .main-card .card-header {
+            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+            border-bottom: 1px solid var(--border-light);
+            padding: 1.5rem;
+        }
+
+        .main-card h4 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .main-card .card-body {
+            padding: 2rem;
+            min-height: 500px;
+        }
+
+        /* ==================== BOTÕES ==================== */
+        .btn {
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all var(--transition-fast);
+            border: 0;
+            padding: 0.5rem 1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, #082566 100%);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-outline-primary {
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline-primary:hover {
+            background: var(--primary-light);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline-success {
+            border: 2px solid var(--success);
+            color: var(--success);
+        }
+
+        .btn-outline-success:hover {
+            background: rgba(16, 169, 129, 0.1);
+            border-color: var(--success);
+            color: var(--success);
+        }
+
+        .btn-group {
+            gap: 0.5rem;
+            display: flex;
+        }
+
+        /* ==================== CÉLULAS ==================== */
+        .cell-card {
+            border: 1px solid var(--border-light);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all var(--transition-base);
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .cell-card:hover {
+            border-color: var(--primary);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-1px);
+        }
+
+        .cell-card.code {
+            border-left: 4px solid var(--primary);
+        }
+
+        .cell-card.markdown {
+            border-left: 4px solid var(--success);
+        }
+
+        .cell-header {
+            background: linear-gradient(135deg, var(--bg-lighter) 0%, var(--bg-light) 100%);
+            padding: 0.75rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .cell-header-left {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .cell-type-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .cell-type-badge.code {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .cell-type-badge.markdown {
+            background: rgba(16, 169, 129, 0.1);
+            color: var(--success);
+        }
+
+        .cell-code {
+            font-family: 'JetBrains Mono', monospace;
+            background: #1a1a1a;
+            color: #e0e0e0;
+            padding: 1rem;
+            overflow-x: auto;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .cell-markdown {
+            background: white;
+            padding: 1rem;
+            color: var(--text-primary);
+        }
+
+        .cell-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .cell-actions .btn-icon {
+            width: 36px;
+            height: 36px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            background: var(--bg-lighter);
+            color: var(--text-secondary);
+            transition: all var(--transition-fast);
+            border: 1px solid var(--border-light);
+        }
+
+        .cell-actions .btn-icon:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* ==================== MODAIS ==================== */
+        .modal-content {
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            box-shadow: var(--shadow-xl);
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: 0;
+            padding: 1.5rem;
+        }
+
+        .modal-header .modal-title {
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+
+        /* ==================== EXECUTION LOG ==================== */
+        .exec-log {
+            max-height: 300px;
+            overflow-y: auto;
+            font-size: 0.85rem;
+            background: #1a1a1a;
+            color: #e0e0e0;
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* ==================== COPILOT ==================== */
+        .copilot-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: 0;
+            box-shadow: var(--shadow-lg);
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 1050;
+            transition: all var(--transition-base);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .copilot-button:hover {
+            transform: scale(1.1) translateY(-4px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .copilot-panel {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 380px;
+            max-width: calc(100% - 60px);
+            height: 500px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: var(--shadow-xl);
+            display: flex;
+            flex-direction: column;
+            z-index: 1050;
+            overflow: hidden;
+            transition: all var(--transition-base);
+            border: 1px solid var(--border-light);
+            animation: slideUp 300ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .copilot-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 1rem;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .copilot-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            background: var(--bg-lighter);
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .copilot-message {
+            padding: 0.75rem 1rem;
+            border-radius: 10px;
+            max-width: 85%;
+            font-size: 0.95rem;
+        }
+
+        .user-message {
+            background: var(--primary);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        .assistant-message {
+            background: white;
+            color: var(--text-primary);
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+            border: 1px solid var(--border-light);
+        }
+
+        .copilot-input-area {
+            display: flex;
+            padding: 1rem;
+            background: white;
+            border-top: 1px solid var(--border-light);
+            gap: 0.75rem;
+        }
+
+        .copilot-input {
+            flex: 1;
+            border: 1px solid var(--border-light);
+            border-radius: 20px;
+            padding: 0.75rem 1rem;
+        }
+
+        .copilot-send {
+            background: var(--primary);
+            border: 0;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* ==================== DATASET STYLING ==================== */
+        .dataset-item {
+            border-left: 4px solid var(--primary) !important;
+            transition: all var(--transition-fast);
+            background: linear-gradient(135deg, rgba(15, 99, 216, 0.02) 0%, rgba(15, 99, 216, 0.05) 100%) !important;
+        }
+
+        .dataset-item:hover {
+            box-shadow: var(--shadow-sm);
+            transform: translateX(4px);
+        }
+
+        .dataset-item .badge {
+            font-size: 0.75rem;
+            font-weight: 500;
+            padding: 0.35rem 0.6rem;
+        }
+
+        .dataset-item .btn-outline-danger {
+            transition: all var(--transition-fast);
+        }
+
+        .dataset-item .btn-outline-danger:hover {
+            transform: scale(1.1);
+        }
+
+        @media (max-width: 768px) {
+            .copilot-panel { width: calc(100% - 40px); height: 400px; }
+            .main-card .card-body { padding: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar-custom mb-4">
+    <div class="container-fluid">
+        <div class="navbar-brand">
+            <i class="bi bi-laptop"></i>
+            InDataLab
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid py-4">
+    <div class="row g-4">
+        <!-- SIDEBAR: Lista de Notebooks -->
+        <div class="col-md-4 col-lg-3">
+            <div class="sidebar">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0"><i class="bi bi-journal-bookmark-fill"></i> Meus Notebooks</h5>
+                        <button class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#notebookModal" onclick="clearNotebookForm()">
+                            <i class="bi bi-plus-lg"></i> Novo
+                        </button>
+                    </div>
+                    <div class="list-group list-group-flush" id="notebooksList">
+                        <div class="text-center p-3 text-muted">Carregando...</div>
+                    </div>
+                    <div class="card-footer">
+                        <nav aria-label="Notebook pagination">
+                            <ul class="pagination pagination-sm mb-0 justify-content-center" id="notebookPagination"></ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MAIN: Células do Notebook Selecionado -->
+        <div class="col-md-8 col-lg-9">
+            <div class="main-card">
+                <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-3">
+                    <div>
+                        <h4 id="selectedNotebookTitle">Selecione um notebook</h4>
+                        <small id="selectedNotebookDesc" class="text-muted"></small>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-outline-primary btn-sm" id="refreshCellsBtn" disabled>
+                            <i class="bi bi-arrow-repeat"></i> Atualizar
+                        </button>
+                        <button class="btn btn-outline-success btn-sm" id="addCellBtn" disabled onclick="openNewCellModal()">
+                            <i class="bi bi-plus-circle"></i> Nova célula
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body" id="cellsContainer">
+                    <div class="empty-state text-center py-5">
+                        <i class="bi bi-inbox" style="font-size: 3rem; color: var(--text-tertiary);"></i>
+                        <h5 class="mt-2">Nenhum notebook selecionado</h5>
+                        <p class="text-muted">Escolha um notebook na barra lateral</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL: Notebook (Criar/Editar) -->
+<div class="modal fade" id="notebookModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="notebookModalTitle">Novo Notebook</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="notebookId">
+                <div class="mb-3">
+                    <label class="form-label">Título <span class="text-danger">*</span></label>
+                    <input type="text" id="notebookTitle" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Descrição</label>
+                    <textarea id="notebookDesc" class="form-control" rows="2"></textarea>
+                </div>
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="notebookPublic">
+                    <label class="form-check-label">Público</label>
+                </div>
+                <div>
+                    <label class="form-label">Kernel</label>
+                    <select id="notebookKernel" class="form-select">
+                        <option value="python3">Python 3</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button class="btn btn-primary" onclick="saveNotebook()">Salvar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- No card do notebook, após o título -->
+<div class="d-flex justify-content-between align-items-start mt-3 mb-3 pb-3" style="border-bottom: 1px solid var(--border-light);">
+    <div>
+        <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#datasetUploadModal">
+            <i class="bi bi-upload"></i> Importar dados
+        </button>
+    </div>
+</div>
+
+<!-- Lista de Datasets -->
+<div class="mb-3">
+    <h6 class="text-muted" style="font-size: 0.9rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">
+        <i class="bi bi-database me-2"></i>Datasets Importados
+    </h6>
+    <div id="datasetsList" class="mt-2"></div>
+</div>
+
+<!-- Modal de upload -->
+<div class="modal fade" id="datasetUploadModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); color: white; border: 0;">
+                <h5 class="modal-title"><i class="bi bi-upload me-2"></i>Importar Dataset</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-muted small mb-3"><i class="bi bi-info-circle me-2"></i>Importe arquivos de dados em diferentes formatos. Os dados estarão disponíveis na variável <code>datasets</code> nas células Python.</p>
+                <div class="mb-3">
+                    <label class="form-label" for="datasetFile"><strong>Selecione um arquivo</strong></label>
+                    <input type="file" id="datasetFile" class="form-control" accept=".csv,.txt,.xlsx,.json" required>
+                    <div class="form-text">Formatos suportados: CSV, TXT, XLSX, JSON</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="uploadDataset()">
+                    <i class="bi bi-upload me-2"></i>Enviar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- MODAL: Célula (Criar/Editar) -->
+<div class="modal fade" id="cellModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="cellModalTitle">Célula</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="cellId">
+                <div class="mb-3">
+                    <label class="form-label">Tipo</label>
+                    <select id="cellType" class="form-select" onchange="toggleCodeHint()">
+                        <option value="code">Código (Python)</option>
+                        <option value="markdown">Markdown</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Conteúdo</label>
+                    <textarea id="cellContent" class="form-control" rows="6" style="font-family: 'JetBrains Mono', monospace;"></textarea>
+                </div>
+                <div class="mb-3" id="outputPreview" style="display:none;">
+                    <label class="form-label">Pré-visualização de saída (opcional)</label>
+                    <textarea id="cellOutput" class="form-control" rows="3"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button class="btn btn-primary" onclick="saveCell()">Salvar célula</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL: Execução e Stats -->
+<div class="modal fade" id="executionModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Execução da célula</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h6 class="fw-600">Estatísticas</h6>
+                        <div id="cellStats" class="small"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="fw-600">Últimas execuções</h6>
+                        <div id="recentExecutions" class="small text-muted"></div>
+                    </div>
+                </div>
+                <h6 class="fw-600">Logs de execução</h6>
+                <div id="execLogs" class="exec-log">Clique em "Executar" para rodar a célula.</div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                <button class="btn btn-success" id="runCellBtn">▶ Executar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- COPILOT -->
+<button class="copilot-button" id="copilotToggleBtn" title="Abrir assistente AI">
+    <i class="bi bi-chat-dots-fill"></i>
+</button>
+<div class="copilot-panel hidden" id="copilotPanel">
+    <div class="copilot-header">
+        <div><i class="bi bi-robot"></i> Assistente InDataLab</div>
+        <div>
+            <button id="copilotClearBtn" class="btn btn-sm btn-link text-white"><i class="bi bi-trash3"></i></button>
+            <button id="copilotCloseBtn" class="btn-close btn-close-white"></button>
+        </div>
+    </div>
+    <div id="copilotMessages" class="copilot-messages">
+        <div class="copilot-message assistant-message">Olá! Sou seu assistente de IA. Posso ajudar com código, explicar células ou sugerir melhorias no notebook atual.</div>
+    </div>
+    <div class="copilot-input-area">
+        <input type="text" id="copilotInput" class="copilot-input" placeholder="Pergunte algo sobre este notebook...">
+        <button id="copilotSendBtn" class="copilot-send"><i class="bi bi-send-fill"></i></button>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// ==================== CONFIGURAÇÃO ====================
+// Use a URL absoluta para evitar problemas de porta. Ajuste se necessário.
+const API_BASE = 'http://127.0.0.1:5000/api';
+let currentNotebookId = null;
+let currentPage = 1;
+let totalPages = 1;
+let currentExecutingCellId = null;
+
+// ==================== UTILITÁRIOS ====================
+async function apiRequest(endpoint, method = 'GET', body = null) {
+    const options = { method, headers: { 'Content-Type': 'application/json' } };
+    if (body) options.body = JSON.stringify(body);
+    const response = await fetch(`${API_BASE}${endpoint}`, options);
+    const data = await response.json();
+    if (!data.success) throw new Error(data.error || 'Erro na requisição');
+    return data.data;
+}
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, function(m) {
+        if (m === '&') return '&amp;';
+        if (m === '<') return '&lt;';
+        if (m === '>') return '&gt;';
+        return m;
+    });
+}
+
+// ==================== NOTEBOOKS ====================
+async function loadNotebooks(page = 1) {
+    try {
+        const data = await apiRequest(`/notebooks?page=${page}&per_page=10`);
+        const notebooks = data.notebooks;
+        const pagination = data.pagination;
+        currentPage = pagination.page;
+        totalPages = pagination.pages;
+        
+        const container = document.getElementById('notebooksList');
+        if (notebooks.length === 0) {
+            container.innerHTML = '<div class="text-center p-3 text-muted">Nenhum notebook criado</div>';
+        } else {
+            container.innerHTML = notebooks.map(nb => `
+                <div class="list-group-item ${currentNotebookId === nb.id ? 'active' : ''}" onclick="selectNotebook(${nb.id}, '${escapeHtml(nb.title)}', '${escapeHtml(nb.description || '')}')">
+                    <strong>${escapeHtml(nb.title)}</strong>
+                    <small>${nb.cell_count || 0} células</small>
+                    <small class="d-block text-muted">${escapeHtml(nb.description?.substring(0, 50) || 'Sem descrição')}</small>
+                    <div class="mt-2">
+                        <button class="btn btn-sm btn-outline-secondary" onclick="event.stopPropagation(); editNotebook(${nb.id})"><i class="bi bi-pencil"></i></button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="event.stopPropagation(); deleteNotebook(${nb.id})"><i class="bi bi-trash"></i></button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        const paginationUl = document.getElementById('notebookPagination');
+        let pagesHtml = '';
+        for (let i = 1; i <= totalPages; i++) {
+            pagesHtml += `<li class="page-item ${i === currentPage ? 'active' : ''}"><a class="page-link" href="#" onclick="loadNotebooks(${i}); return false;">${i}</a></li>`;
+        }
+        paginationUl.innerHTML = pagesHtml;
+    } catch (err) {
+        console.error(err);
+        document.getElementById('notebooksList').innerHTML = `<div class="alert alert-danger m-2">${err.message}</div>`;
+    }
+}
+
+function selectNotebook(id, title, desc) {
+    currentNotebookId = id;
+    document.getElementById('selectedNotebookTitle').innerText = title;
+    document.getElementById('selectedNotebookDesc').innerText = desc;
+    document.getElementById('refreshCellsBtn').disabled = false;
+    document.getElementById('addCellBtn').disabled = false;
+    loadCells(id);
+    loadDatasets();
+    loadNotebooks(currentPage);
+}
+
+async function saveNotebook() {
+    const id = document.getElementById('notebookId').value;
+    const title = document.getElementById('notebookTitle').value.trim();
+    if (!title) { alert('Título é obrigatório'); return; }
+    const description = document.getElementById('notebookDesc').value;
+    const is_public = document.getElementById('notebookPublic').checked;
+    const kernel_type = document.getElementById('notebookKernel').value;
+    
+    try {
+        if (id) {
+            await apiRequest(`/notebooks/${id}`, 'PUT', { title, description, is_public, kernel_type });
+        } else {
+            await apiRequest(`/notebooks`, 'POST', { title, description, is_public, kernel_type });
+        }
+        bootstrap.Modal.getInstance(document.getElementById('notebookModal')).hide();
+        loadNotebooks(currentPage);
+        if (currentNotebookId) loadCells(currentNotebookId);
+    } catch (err) { alert(err.message); }
+}
+
+async function editNotebook(id) {
+    try {
+        const notebook = await apiRequest(`/notebooks/${id}`);
+        const nb = notebook.notebook;
+        document.getElementById('notebookId').value = nb.id;
+        document.getElementById('notebookTitle').value = nb.title;
+        document.getElementById('notebookDesc').value = nb.description || '';
+        document.getElementById('notebookPublic').checked = nb.is_public;
+        document.getElementById('notebookKernel').value = nb.kernel_type;
+        document.getElementById('notebookModalTitle').innerText = 'Editar Notebook';
+        new bootstrap.Modal(document.getElementById('notebookModal')).show();
+    } catch (err) { alert(err.message); }
+}
+
+async function deleteNotebook(id) {
+    if (!confirm('Deletar notebook e todas as células? Essa ação é irreversível.')) return;
+    try {
+        await apiRequest(`/notebooks/${id}`, 'DELETE');
+        if (currentNotebookId === id) {
+            currentNotebookId = null;
+            document.getElementById('selectedNotebookTitle').innerText = 'Selecione um notebook';
+            document.getElementById('cellsContainer').innerHTML = '<div class="empty-state text-center py-5"><i class="bi bi-inbox" style="font-size: 3rem;"></i><h5>Notebook deletado</h5><p>Selecione outro notebook</p></div>';
+            document.getElementById('refreshCellsBtn').disabled = true;
+            document.getElementById('addCellBtn').disabled = true;
+        }
+        loadNotebooks(currentPage);
+    } catch (err) { alert(err.message); }
+}
+
+function clearNotebookForm() {
+    document.getElementById('notebookId').value = '';
+    document.getElementById('notebookTitle').value = '';
+    document.getElementById('notebookDesc').value = '';
+    document.getElementById('notebookPublic').checked = false;
+    document.getElementById('notebookKernel').value = 'python3';
+    document.getElementById('notebookModalTitle').innerText = 'Novo Notebook';
+}
+
+// ==================== CÉLULAS ====================
+function clearCellForm() {
+    document.getElementById('cellId').value = '';
+    document.getElementById('cellType').value = 'code';
+    document.getElementById('cellContent').value = '';
+    document.getElementById('cellOutput').value = '';
+    document.getElementById('outputPreview').style.display = 'none';
+    document.getElementById('cellModalTitle').innerText = 'Nova Célula';
+}
+
+function openNewCellModal() {
+    clearCellForm();
+    new bootstrap.Modal(document.getElementById('cellModal')).show();
+}
+
+async function loadCells(notebookId) {
+    try {
+        const data = await apiRequest(`/notebooks/${notebookId}/cells`);
+        const cells = data.cells;
+        const container = document.getElementById('cellsContainer');
+        if (!cells.length) {
+            container.innerHTML = '<div class="empty-state text-center py-5"><i class="bi bi-file-earmark-code" style="font-size: 3rem;"></i><h5>Nenhuma célula</h5><p>Crie a primeira célula</p></div>';
+            return;
+        }
+        cells.sort((a,b) => (a.position || 0) - (b.position || 0));
+        container.innerHTML = cells.map(cell => `
+            <div class="cell-card ${cell.cell_type}" data-cell-id="${cell.id}" draggable="true">
+                <div class="cell-header">
+                    <div class="cell-header-left">
+                        <span class="cell-type-badge ${cell.cell_type}">
+                            <i class="bi ${cell.cell_type === 'code' ? 'bi-code-square' : 'bi-markdown'}"></i>
+                            ${cell.cell_type === 'code' ? 'Código' : 'Markdown'}
+                        </span>
+                        <span>Célula #${cell.id}</span>
+                    </div>
+                    <div class="cell-actions">
+                        <button class="btn-icon" onclick="editCell(${cell.id})" title="Editar"><i class="bi bi-pencil"></i></button>
+                        <button class="btn-icon" onclick="deleteCell(${cell.id})" title="Excluir"><i class="bi bi-trash"></i></button>
+                        ${cell.cell_type === 'code' ? `<button class="btn-icon" onclick="showExecutionModal(${cell.id})" title="Executar"><i class="bi bi-play-fill"></i></button>` : ''}
+                    </div>
+                </div>
+                <div class="${cell.cell_type === 'code' ? 'cell-code' : 'cell-markdown'}">
+                    ${cell.cell_type === 'markdown' ? `<div class="markdown-body">${marked.parse(cell.content)}</div>` : `<pre><code>${escapeHtml(cell.content)}</code></pre>`}
+                    ${cell.output ? `<div class="cell-output"><strong>Saída anterior:</strong><pre>${escapeHtml(cell.output)}</pre></div>` : ''}
+                </div>
+            </div>
+        `).join('');
+        
+        attachDragAndDrop();
+    } catch (err) {
+        document.getElementById('cellsContainer').innerHTML = `<div class="alert alert-danger">${err.message}</div>`;
+    }
+}
+
+function attachDragAndDrop() {
+    const cards = document.querySelectorAll('.cell-card');
+    let dragSrc = null;
+    cards.forEach(card => {
+        card.setAttribute('draggable', 'true');
+        card.addEventListener('dragstart', e => {
+            dragSrc = card;
+            e.dataTransfer.effectAllowed = 'move';
+            card.classList.add('dragging');
+        });
+        card.addEventListener('dragend', e => {
+            card.classList.remove('dragging');
+        });
+        card.addEventListener('dragover', e => {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+        });
+        card.addEventListener('drop', async e => {
+            e.preventDefault();
+            if (dragSrc && dragSrc !== card) {
+                const container = document.getElementById('cellsContainer');
+                const cells = Array.from(container.children);
+                const srcIndex = cells.indexOf(dragSrc);
+                const dstIndex = cells.indexOf(card);
+                if (srcIndex < dstIndex) {
+                    container.insertBefore(dragSrc, card.nextSibling);
+                } else {
+                    container.insertBefore(dragSrc, card);
+                }
+                const newOrder = Array.from(container.children).map(el => parseInt(el.dataset.cellId));
+                await reorderCells(newOrder);
+            }
+            dragSrc = null;
+        });
+    });
+}
+
+async function reorderCells(cellOrder) {
+    try {
+        await apiRequest(`/notebooks/${currentNotebookId}/cells/reorder`, 'POST', { cell_order: cellOrder });
+        loadCells(currentNotebookId);
+    } catch (err) { console.error(err); alert('Erro ao reordenar células'); }
+}
+
+async function editCell(cellId) {
+    try {
+        const cellsData = await apiRequest(`/notebooks/${currentNotebookId}/cells`);
+        const cell = cellsData.cells.find(c => c.id === cellId);
+        if (!cell) throw new Error('Célula não encontrada');
+        
+        clearCellForm();
+        document.getElementById('cellId').value = cell.id;
+        document.getElementById('cellType').value = cell.cell_type;
+        document.getElementById('cellContent').value = cell.content;
+        document.getElementById('cellOutput').value = cell.output || '';
+        document.getElementById('outputPreview').style.display = cell.cell_type === 'code' ? 'block' : 'none';
+        document.getElementById('cellModalTitle').innerText = 'Editar Célula';
+        new bootstrap.Modal(document.getElementById('cellModal')).show();
+    } catch(err) {
+        alert(err.message);
+    }
+}
+
+async function saveCell() {
+    const id = document.getElementById('cellId').value;
+    const cell_type = document.getElementById('cellType').value;
+    const content = document.getElementById('cellContent').value;
+    const output = document.getElementById('cellOutput').value;
+    if (!content.trim()) { alert('Conteúdo não pode estar vazio'); return; }
+    const payload = { cell_type, content };
+    if (output) payload.output = output;
+    try {
+        if (id) {
+            await apiRequest(`/notebooks/${currentNotebookId}/cells/${id}`, 'PUT', payload);
+        } else {
+            await apiRequest(`/notebooks/${currentNotebookId}/cells`, 'POST', payload);
+        }
+        bootstrap.Modal.getInstance(document.getElementById('cellModal')).hide();
+        loadCells(currentNotebookId);
+    } catch(err) { alert(err.message); }
+}
+
+async function deleteCell(cellId) {
+    if (!confirm('Remover esta célula?')) return;
+    try {
+        await apiRequest(`/notebooks/${currentNotebookId}/cells/${cellId}`, 'DELETE');
+        loadCells(currentNotebookId);
+    } catch(err) { alert(err.message); }
+}
+
+function toggleCodeHint() {
+    const type = document.getElementById('cellType').value;
+    document.getElementById('outputPreview').style.display = type === 'code' ? 'block' : 'none';
+}
+
+// ==================== GERENCIAMENTO DE DATASETS ====================
+async function uploadDataset() {
+    const fileInput = document.getElementById('datasetFile');
+    const file = fileInput.files[0];
+    if (!file) {
+        alert('Selecione um arquivo');
+        return;
+    }
+    
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    const uploadBtn = document.querySelector('#datasetUploadModal .btn-primary');
+    uploadBtn.disabled = true;
+    uploadBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Enviando...';
+    
+    try {
+        const response = await fetch(`${API_BASE}/notebooks/${currentNotebookId}/datasets`, {
+            method: 'POST',
+            body: formData
+        });
+        const data = await response.json();
+        if (data.success) {
+            bootstrap.Modal.getInstance(document.getElementById('datasetUploadModal')).hide();
+            fileInput.value = '';
+            await loadDatasets();
+            alert('✅ Arquivo importado com sucesso!');
+        } else {
+            alert('❌ Erro: ' + (data.error || 'Erro desconhecido'));
+        }
+    } catch (err) {
+        alert('❌ Falha no upload: ' + err.message);
+    } finally {
+        uploadBtn.disabled = false;
+        uploadBtn.innerHTML = '<i class="bi bi-upload me-2"></i>Enviar';
+    }
+}
+
+async function loadDatasets() {
+    if (!currentNotebookId) return;
+    try {
+        const response = await fetch(`${API_BASE}/notebooks/${currentNotebookId}/datasets`);
+        const data = await response.json();
+        const datasetsContainer = document.getElementById('datasetsList');
+        
+        if (data.success && data.datasets && data.datasets.length > 0) {
+            const html = data.datasets.map(ds => `
+                <div class="dataset-item d-flex justify-content-between align-items-center p-2 mb-2 bg-light rounded" style="border-left: 3px solid var(--primary);">
+                    <div class="flex-grow-1">
+                        <div class="small"><i class="bi bi-file-earmark-text"></i> <strong>${escapeHtml(ds.filename)}</strong></div>
+                        <div style="font-size: 0.75rem; color: var(--text-secondary);">
+                            <span class="badge bg-info-subtle text-info me-2">${ds.rows || 0} linhas</span>
+                            <span class="badge bg-secondary-subtle text-secondary">${ds.columns || 0} colunas</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-sm btn-outline-danger ms-2" onclick="deleteDataset(${ds.id}, '${escapeHtml(ds.filename)}')" title="Deletar">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </div>
+            `).join('');
+            datasetsContainer.innerHTML = html;
+        } else {
+            datasetsContainer.innerHTML = '<div class="alert alert-info small mb-0"><i class="bi bi-info-circle me-2"></i>Nenhum dataset importado ainda</div>';
+        }
+    } catch (err) {
+        console.error('Erro ao carregar datasets:', err);
+        document.getElementById('datasetsList').innerHTML = '<div class="alert alert-danger small mb-0">Erro ao carregar datasets</div>';
+    }
+}
+
+async function deleteDataset(datasetId, filename) {
+    if (!confirm(`Remover "${filename}" permanentemente?`)) return;
+    
+    try {
+        const response = await fetch(`${API_BASE}/notebooks/${currentNotebookId}/datasets/${datasetId}`, {
+            method: 'DELETE'
+        });
+        const data = await response.json();
+        if (data.success) {
+            await loadDatasets();
+            alert('✅ Dataset removido com sucesso');
+        } else {
+            alert('❌ Erro ao deletar: ' + (data.error || 'Erro desconhecido'));
+        }
+    } catch (err) {
+        alert('❌ Erro: ' + err.message);
+    }
+}
+
+// ==================== EXECUÇÃO ====================
+async function showExecutionModal(cellId) {
+    currentExecutingCellId = cellId;
+    try {
+        const stats = await apiRequest(`/notebooks/${currentNotebookId}/cells/${cellId}/stats`);
+        document.getElementById('cellStats').innerHTML = `
+            <strong>Execuções:</strong> ${stats.total_executions}<br>
+            <strong>Sucesso:</strong> ${stats.successful}<br>
+            <strong>Erros:</strong> ${stats.errors}<br>
+            <strong>Taxa sucesso:</strong> ${stats.success_rate}%<br>
+            <strong>Tempo médio:</strong> ${stats.avg_execution_time || 0}s
+        `;
+        
+        const executions = await apiRequest(`/notebooks/${currentNotebookId}/cells/${cellId}/executions?limit=5`);
+        if (executions.executions && executions.executions.length) {
+            const recent = executions.executions.map(ex => 
+                `<div><small>${new Date(ex.executed_at).toLocaleTimeString()} - ${ex.status} ${ex.execution_time ? `(${ex.execution_time}s)` : ''}</small></div>`
+            ).join('');
+            document.getElementById('recentExecutions').innerHTML = recent;
+        } else {
+            document.getElementById('recentExecutions').innerHTML = '<small>Nenhuma execução ainda</small>';
+        }
+        
+        document.getElementById('execLogs').innerHTML = 'Clique em "Executar" para rodar a célula.';
+        new bootstrap.Modal(document.getElementById('executionModal')).show();
+    } catch(err) {
+        alert(err.message);
+    }
+}
+
+document.getElementById('runCellBtn').addEventListener('click', async () => {
+    if (!currentExecutingCellId) return;
+    const runBtn = document.getElementById('runCellBtn');
+    runBtn.disabled = true;
+    runBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Executando...';
+    
+    try {
+        const execution = await apiRequest(
+            `/notebooks/${currentNotebookId}/cells/${currentExecutingCellId}/execute`,
+            'POST',
+            {}
+        );
+        
+        const logs = execution.logs || 'Sem saída';
+        document.getElementById('execLogs').innerHTML = `<pre style="white-space: pre-wrap;">${escapeHtml(logs)}</pre>`;
+        
+        const stats = await apiRequest(`/notebooks/${currentNotebookId}/cells/${currentExecutingCellId}/stats`);
+        document.getElementById('cellStats').innerHTML = `
+            <strong>Execuções:</strong> ${stats.total_executions}<br>
+            <strong>Sucesso:</strong> ${stats.successful}<br>
+            <strong>Erros:</strong> ${stats.errors}<br>
+            <strong>Taxa sucesso:</strong> ${stats.success_rate}%<br>
+            <strong>Tempo médio:</strong> ${stats.avg_execution_time || 0}s
+        `;
+        
+        loadCells(currentNotebookId);
+    } catch(err) {
+        document.getElementById('execLogs').innerHTML = `<div class="alert alert-danger">Erro: ${err.message}</div>`;
+    } finally {
+        runBtn.disabled = false;
+        runBtn.innerHTML = '▶ Executar';
+    }
+});
+
+// ==================== COPILOT (mesma lógica antiga, visual novo) ====================
+let copilotSessionId = null;
+const toggleBtn = document.getElementById('copilotToggleBtn');
+const panel = document.getElementById('copilotPanel');
+const closeBtn = document.getElementById('copilotCloseBtn');
+const messagesDiv = document.getElementById('copilotMessages');
+const inputMsg = document.getElementById('copilotInput');
+const sendBtn = document.getElementById('copilotSendBtn');
+
+function toggleCopilot() {
+    if (panel.classList.contains('hidden')) {
+        panel.classList.remove('hidden');
+    } else {
+        panel.classList.add('hidden');
+    }
+}
+
+function addMessage(text, isUser) {
+    const msgDiv = document.createElement('div');
+    msgDiv.className = `copilot-message ${isUser ? 'user-message' : 'assistant-message'}`;
+    if (!isUser && marked) {
+        msgDiv.innerHTML = marked.parse(text);
+    } else {
+        msgDiv.innerText = text;
+    }
+    messagesDiv.appendChild(msgDiv);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+}
+
+const clearBtn = document.getElementById('copilotClearBtn');
+clearBtn.addEventListener('click', async () => {
+    if (!currentNotebookId) {
+        addMessage('⚠️ Selecione um notebook primeiro.', false);
+        return;
+    }
+    if (!confirm('Limpar todo o histórico de conversa deste notebook?')) return;
+    try {
+        const response = await fetch(`${API_BASE}/copilot/notebooks/${currentNotebookId}/clear_chat`, {
+            method: 'DELETE'
+        });
+        const data = await response.json();
+        if (data.success) {
+            messagesDiv.innerHTML = '';
+            addMessage('🧹 Histórico limpo! Você pode começar uma nova conversa.', false);
+            copilotSessionId = `notebook_${currentNotebookId}_${Date.now()}`;
+        } else {
+            addMessage(`❌ Erro ao limpar: ${data.error}`, false);
+        }
+    } catch (err) {
+        addMessage(`❌ Falha: ${err.message}`, false);
+    }
+});
+
+async function sendCopilotMessage() {
+    const message = inputMsg.value.trim();
+    if (!message) return;
+    if (!currentNotebookId) {
+        addMessage('⚠️ Selecione um notebook primeiro.', false);
+        return;
+    }
+    if (!copilotSessionId) copilotSessionId = `notebook_${currentNotebookId}`;
+    addMessage(message, true);
+    inputMsg.value = '';
+    sendBtn.disabled = true;
+    inputMsg.disabled = true;
+    try {
+        const response = await fetch(`${API_BASE}/copilot/notebooks/${currentNotebookId}/chat`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message, session_id: copilotSessionId })
+        });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const data = await response.json();
+        if (data.success) {
+            addMessage(data.response, false);
+            if (data.session_id) copilotSessionId = data.session_id;
+        } else {
+            addMessage(`❌ Erro: ${data.error || 'Erro desconhecido.'}`, false);
+        }
+    } catch (err) {
+        addMessage(`❌ Falha na comunicação: ${err.message}`, false);
+    } finally {
+        sendBtn.disabled = false;
+        inputMsg.disabled = false;
+        inputMsg.focus();
+    }
+}
+
+toggleBtn.addEventListener('click', toggleCopilot);
+closeBtn.addEventListener('click', toggleCopilot);
+sendBtn.addEventListener('click', sendCopilotMessage);
+inputMsg.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendCopilotMessage(); });
+
+// Inicialização
+loadNotebooks(1);
+</script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+id,nome,email,idade,cidade,estado,cargo,salario,data_admissao,status,ultimo_acesso,pontuacao
+1,Ana Souza,ana.souza@email.com,28,São Paulo,SP,Analista de Dados,5200.50,2023-01-15,Ativo,2026-05-10 08:30:00,88
+2,Carlos Lima,carlos.lima@email.com,35,Rio de Janeiro,RJ,Desenvolvedor Backend,7800.00,2022-07-21,Ativo,2026-05-11 14:12:00,94
+3,Mariana Alves,mariana.alves@email.com,42,Belo Horizonte,MG,Gerente de Projetos,9800.90,2021-03-10,Ativo,2026-05-12 09:20:00,91
+4,Pedro Martins,pedro.martins@email.com,25,Curitiba,PR,Estagiário,1800.00,2025-02-01,Ativo,2026-05-09 16:45:00,72
+5,Juliana Costa,juliana.costa@email.com,31,Fortaleza,CE,UX Designer,6100.75,2023-09-18,Inativo,2026-04-30 11:00:00,84
+6,Rafael Gomes,rafael.gomes@email.com,29,Porto Alegre,RS,DevOps Engineer,8500.20,2022-11-05,Ativo,2026-05-11 19:15:00,96
+7,Patricia Rocha,patricia.rocha@email.com,38,Recife,PE,Product Owner,10500.00,2020-08-12,Ativo,2026-05-12 07:55:00,89
+8,Lucas Fernandes,lucas.fernandes@email.com,27,Goiânia,GO,Frontend Developer,6400.40,2024-01-22,Ativo,2026-05-10 22:10:00,86
+9,Fernanda Melo,fernanda.melo@email.com,45,Salvador,BA,Diretora Comercial,15000.00,2019-05-30,Ativo,2026-05-08 13:40:00,97
+10,Gustavo Ribeiro,gustavo.ribeiro@email.com,33,Campinas,SP,Cientista de Dados,11200.60,2021-12-14,Ativo,2026-05-12 10:05:00,93
